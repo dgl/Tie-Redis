@@ -5,7 +5,7 @@ use_ok Tie::Redis;
 
 test_redis {
   my($port) = @_;
-  
+
   # Use two connections, to ensure we aren't caching locally (very unlikely, we
   # don't cache yet).
   tie my %r_w, "Tie::Redis", port => $port;

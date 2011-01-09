@@ -1,8 +1,6 @@
 use Test::More;
 use t::Redis;
 
-use_ok Tie::Redis;
-
 test_redis {
   my($port) = @_;
 
@@ -25,5 +23,3 @@ test_redis {
   $r_w{list} = [ 1 .. 10 ];
   is_deeply $r_r{list}, [ 1 .. 10];
 };
-
-done_testing;

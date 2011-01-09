@@ -8,6 +8,12 @@ use Tie::Redis::Hash;
 use Tie::Redis::List;
 use Tie::Redis::Scalar;
 
+{
+  # Work around bug in AnyEvent::Redis 0.22.
+  no strict 'refs';
+  *anyevent_read_type = *AnyEvent::Redis::anyevent_read_type;
+}
+
 sub TIEHASH {
   my($class, %args) = @_;
   my $serialize = delete $args{serialize};

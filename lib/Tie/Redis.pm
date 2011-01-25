@@ -12,7 +12,7 @@ sub TIEHASH {
   my($class, %args) = @_;
   my $serialize = delete $args{serialize};
 
-  my $self = $class->AnyEvent::Redis::new(%args);
+  my $self = $class->SUPER::new(%args);
   $self->{serialize} = $self->_serializer($serialize);
 
   return $self;

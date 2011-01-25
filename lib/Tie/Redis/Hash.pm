@@ -1,4 +1,5 @@
 package Tie::Redis::Hash;
+# ABSTRACT: Connect a Redis hash to a Perl hash
 
 sub TIEHASH {
   my($class, %args) = @_;
@@ -60,10 +61,6 @@ sub SCALAR {
 }
 
 1;
-
-=head1 NAME
-
-Tie::Redis::Hash - Connect a Redis hash to a Perl hash
 
 =head1 SYNOPSIS
 

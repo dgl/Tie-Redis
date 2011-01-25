@@ -1,4 +1,5 @@
 package Tie::Redis::List;
+# ABSTRACT: Connect a Redis list to a Perl array
 
 sub TIEARRAY {
   my($class, %args) = @_;
@@ -42,16 +43,35 @@ sub STORE {
   }
 }
 
+sub POP {
+  my($self) = @_;
+  $self->_cmd("rpop");
+}
+
+sub SHIFT {
+  my($self) = @_;
+  $self->_cmd("lpop");
+}
+
+sub UNSHIFT {
+  my($self, $value) = @_;
+  $self->_cmd(lpush => $value);
+}
+
+sub SPLICE {
+  my($self, $offset, $length, @list) = @_;
+
+  my @items = $length == 0 ? () : $self->_cmd(lrange => $offset, $length - 1);
+  $self->_cmd(ltrim => $offset, $offset + $length - 1) if $length > 0;
+  # XXX
+}
+
 sub CLEAR {
   my($self) = @_;
   $self->_cmd("del");
 }
 
 1;
-
-=head1 NAME
-
-Tie::Redis::List - Connect a Redis list to a Perl array
 
 =head1 SYNOPSIS
 

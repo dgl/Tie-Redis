@@ -1,4 +1,4 @@
-use Test::More tests => 3;
+use Test::More tests => 3 + 10;
 use Tie::Redis;
 use t::Redis;
 
@@ -10,14 +10,14 @@ test_redis {
   tie my %r_w, "Tie::Redis", port => $port;
   tie my %r_r, "Tie::Redis", port => $port;
 
-  # Top level scalar value
-  $r_w{foo} = 42;
-  is $r_r{foo}, 42;
+  # List
+  $r_w{list} = [1];
+  is scalar @{$r_r{list}}, 1;
 
-  # Hash value
-  $r_w{hash} = { a => 16 };
-  is $r_r{hash}{a}, 16;
+  $r_w{list} = [1 .. 10];
+  is_deeply $r_r{list}, [ 1 .. 10];
 
-  is_deeply [keys %{$r_r{hash}}], ["a"];
+  is shift @{$r_r{list}}, $_ for 1 .. 10;
+  ok not scalar @{$r_r{list}};
 
 };

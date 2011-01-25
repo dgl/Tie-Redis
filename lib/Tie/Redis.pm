@@ -33,10 +33,13 @@ sub _serializer {
       \&Storaable::thaw
     ],
     msgpack => [
+      sub { require Data::MessagePack },
+      sub { unshift @_, "Data::MessagePack"; goto &Data::MessagePack::pack },
+      sub { unshift @_, "Data::MessagePack"; goto &Data::MessagePack::unpack }
     ],
   );
 
-  my $serializer = $serializers{$serialize} || [undef, (sub {
+  my $serializer = $serializers{$serialize || ''} || [undef, (sub {
     Carp::croak("No serializer specified for Tie::Redis; unable to handle nested structures");
   }) x 2];
 

@@ -1,4 +1,4 @@
-use Test::More;
+use Test::More tests => 4;
 use t::Redis;
 
 test_redis {

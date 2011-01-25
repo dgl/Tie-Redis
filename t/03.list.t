@@ -18,6 +18,6 @@ test_redis {
   is_deeply $r_r{list}, [ 1 .. 10];
 
   is shift @{$r_r{list}}, $_ for 1 .. 10;
-  ok not scalar @{$r_r{list}};
+  is $r_r{list}, undef; # Empty lists become none in Redis
 
 };

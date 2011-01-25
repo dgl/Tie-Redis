@@ -19,5 +19,4 @@ test_redis {
   is $r_r{hash}{a}, 16;
 
   is_deeply [keys %{$r_r{hash}}], ["a"];
-
 };

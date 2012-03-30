@@ -53,7 +53,7 @@ sub _cmd {
   
   my $message;
   do {
-    $self->{_sock}->sysread(my $buf, 8192);
+    $self->{_sock}->sysread(my $buf, 8192) or return;
     $self->{_pr}->parse($buf);
     $message = $self->{_pr}->get_message;
   } while not $message;

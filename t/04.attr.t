@@ -3,6 +3,7 @@ use Test::More;
 
 BEGIN {
   plan skip_all => "Needs Perl >= 5.10.1" unless $^V >= v5.10.1;
+  plan tests => 2;
 }
 
 BEGIN {
@@ -12,7 +13,6 @@ BEGIN {
 our $port;
 test_redis {
   ($port) = @_;
-  plan tests => 2;
 
   tie my %r, "Tie::Redis", port => $port;
   my %special : Redis(port => $port);

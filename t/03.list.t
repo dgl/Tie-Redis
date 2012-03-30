@@ -1,9 +1,10 @@
-use Test::More tests => 3 + 10;
+use Test::More;
 use Tie::Redis;
 use t::Redis;
 
 test_redis {
   my($port) = @_;
+  plan tests => 3 + 10;
 
   # Use two connections, to ensure we aren't caching locally (very unlikely, we
   # don't cache yet).

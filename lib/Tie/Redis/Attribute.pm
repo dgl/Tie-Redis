@@ -97,7 +97,7 @@ sub server {
   state %server;
 
   $server{($args{host}||"") . ":" . ($args{port}||"")}
-    ||= Tie::Redis->new(%args);
+    ||= Tie::Redis::Connection->new(%args);
 }
 
 1;

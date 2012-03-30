@@ -1,9 +1,9 @@
 package Tie::Redis;
 # ABSTRACT: Connect perl data structures to Redis
 use strict;
-use parent qw(AnyEvent::Redis);
 use Carp ();
 
+use Tie::Redis::Connection;
 use Tie::Redis::Hash;
 use Tie::Redis::List;
 use Tie::Redis::Scalar;
@@ -11,11 +11,14 @@ use Tie::Redis::Scalar;
 sub TIEHASH {
   my($class, %args) = @_;
   my $serialize = delete $args{serialize};
+  
+  my $conn = Tie::Redis::Connection->new(%args);
+  Carp::croak "Unable to connect to Redis server: $!" unless $conn;
 
-  my $self = $class->SUPER::new(%args);
-  $self->{serialize} = $self->_serializer($serialize);
-
-  return $self;
+  bless {
+    _conn     => $conn,
+    serialize => $class->_serializer($serialize),
+  }, $class;
 }
 
 sub _serializer {
@@ -56,27 +59,7 @@ sub _cmd {
     $args[0] = "$self->{prefix}$args[0]";
   }
 
-  if($self->{use_recv}) {
-    $self->$cmd(@args)->recv;
-  } else {
-    my($ret, $error, $done);
-
-    $done = 0;
-    my $cv = $self->$cmd(@args);
-    $cv->cb(sub {
-        $done = 1;
-        $ret = eval { $_[0]->recv };
-        if($@) {
-          $error = $@;
-        }
-      });
-
-    # We need to block, but using ->recv won't work if the program is using
-    # ->recv at a higher level, so we do this slight hack.
-    AnyEvent->one_event until $done;
-    die $error if defined $error;
-    $ret;
-  }
+  $self->{_conn}->$cmd(@args);
 }
 
 sub STORE {
@@ -219,10 +202,6 @@ module.
 =item * L<Tie::Redis::Attributes>
 
 An experimental attribute based interface.
-
-=item * L<AnyEvent::Redis>
-
-The API this uses to access Redis.
 
 =item * L<Redis>
 

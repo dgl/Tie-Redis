@@ -14,7 +14,7 @@ BEGIN {
 
   sub server {
     my($class, %args) = @_;
-    return Tie::Redis->new(port => $port);
+    return Tie::Redis::Connection->new(port => $port);
   }
 }
 

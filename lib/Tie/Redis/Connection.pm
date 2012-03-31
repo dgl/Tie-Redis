@@ -61,6 +61,8 @@ sub _cmd {
   if($message->{type} eq '*') {
     warn "TR<< ", (join " ", map $_->{data}, @{$message->{data}}), "\n" if DEBUG;
     [map $_->{data}, @{$message->{data}}];
+  } elsif($message->{type} eq '-') {
+    Carp::croak "$cmd: " . $message->{data};
   } else {
     warn "TR<< $message->{data}\n" if DEBUG;
     $message->{data};

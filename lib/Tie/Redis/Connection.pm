@@ -32,7 +32,9 @@ sub new {
   }, $class;
 }
 
-sub DESTROY { }
+sub DESTROY {
+  close shift->{_sock};
+}
 
 sub AUTOLOAD {
   my $self = shift;
@@ -60,7 +62,8 @@ sub _cmd {
 
   if($message->{type} eq '*') {
     warn "TR<< ", (join " ", map $_->{data}, @{$message->{data}}), "\n" if DEBUG;
-    [map $_->{data}, @{$message->{data}}];
+    my @data = map $_->{data}, @{$message->{data}};
+    wantarray ? @data : \@data;
   } elsif($message->{type} eq '-') {
     Carp::croak "$cmd: " . $message->{data};
   } else {

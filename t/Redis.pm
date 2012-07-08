@@ -2,7 +2,6 @@ package t::Redis;
 use strict;
 use Test::TCP;
 use Test::More;
-use AnyEvent::Redis;
 use FindBin;
 
 use base qw(Exporter);
